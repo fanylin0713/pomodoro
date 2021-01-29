@@ -1,4 +1,6 @@
-import React, {useState} from 'react';
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import { connect } from 'react-redux'
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -13,23 +15,23 @@ import FormControl from '@material-ui/core/FormControl';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
 
-const TodoList = () => {
-	const [todoValue, setTodoValue] = useState('');
+import { addTodo, changeText, deleteTodo } from '../redux/action';
 
-	const todoList = [
-		{
-			id: '1',
-			name: 'eat'
-		},
-		{
-			id: '2',
-			name: 'sleep'
-		},
-		{
-			id: '3',
-			name: 'play'
-		},
-	];
+const mapStateToProps = (state) => ({
+	todoList: [...state.todoList.todoList],
+	input: state.todoList.input,
+})
+
+const TodoList = ({todoList, input}) => {
+	const dispatch = useDispatch();
+	const handleAddTodo = () => {
+		dispatch(addTodo(input.title))
+		dispatch(changeText(''))
+	}
+
+	const handleDeleteTodo = (e, value) => {
+		dispatch(deleteTodo(value.id))
+	}
 
 	return (
 		<>
@@ -37,12 +39,12 @@ const TodoList = () => {
 				<InputLabel htmlFor="todoThing">輸入待辦事項</InputLabel>
 				<OutlinedInput
 					id="todoThing"
-					value={todoValue}
-					onChange={e=> setTodoValue(e.target.value)}
+					value={input.title}
+					onChange={e => dispatch(changeText(e.target.value))}
 					endAdornment={
 						<InputAdornment position="end">
 							<IconButton
-								// onClick={handleClickShowPassword}
+								onClick={handleAddTodo}
 								// onMouseDown={handleMouseDownPassword}
 								edge="end"
 							>
@@ -57,10 +59,10 @@ const TodoList = () => {
 				{todoList.map(el => (
 					<ListItem divider key={el.id}>
 						<ListItemText
-							primary={`${el.id}. ${el.name}`}
+							primary={`${el.id}. ${el.title}`}
 						/>
 						<ListItemSecondaryAction>
-							<IconButton edge="end">
+							<IconButton edge="end" onClick={e => handleDeleteTodo(e, el)}>
 								<DeleteIcon />
 							</IconButton>
 						</ListItemSecondaryAction>
@@ -71,5 +73,22 @@ const TodoList = () => {
 	);
 };
 
-export default TodoList;
 
+// const mapDispatchToProps = (dispatch) => ({
+// 	onClick: (input) => {
+// 			dispatch(addTodo({
+// 					title: input.title
+// 			}))
+// 	},
+// 	onDelete: (index) => {
+// 			dispatch(deleteTodo(index));
+// 	},
+// 	onInput: (value) => {
+// 			dispatch(changeText(value));
+// 	},
+// });
+
+export default connect(
+	mapStateToProps,
+  // mapDispatchToProps,
+)(TodoList);
