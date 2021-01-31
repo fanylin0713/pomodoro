@@ -74,21 +74,6 @@ const TodoList = ({todoList, input}) => {
 };
 
 
-// const mapDispatchToProps = (dispatch) => ({
-// 	onClick: (input) => {
-// 			dispatch(addTodo({
-// 					title: input.title
-// 			}))
-// 	},
-// 	onDelete: (index) => {
-// 			dispatch(deleteTodo(index));
-// 	},
-// 	onInput: (value) => {
-// 			dispatch(changeText(value));
-// 	},
-// });
-
 export default connect(
-	mapStateToProps,
-  // mapDispatchToProps,
+	mapStateToProps
 )(TodoList);

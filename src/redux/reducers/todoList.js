@@ -1,5 +1,4 @@
-import { combineReducers } from 'redux';
-import { ADD_TODO, DELETE_TODO, CHANGE_TEXT } from './action';
+import { ADD_TODO, DELETE_TODO, CHANGE_TEXT } from '../action';
 
 const initialState = {
 	todoList: [
@@ -54,8 +53,4 @@ function todoList(state = initialState, action) {
   }
 }
 
-const reducers = combineReducers({
-  todoList,
-})
-
-export default reducers
+export default todoList
