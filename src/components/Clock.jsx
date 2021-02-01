@@ -3,7 +3,10 @@ import { connect } from 'react-redux'
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import PauseIcon from '@material-ui/icons/Pause';
 
 const mapStateToProps = (state) => ({
   minutes: state.clock.minutes,
@@ -12,36 +15,63 @@ const mapStateToProps = (state) => ({
 
 const Clock = ({ minutes, seconds }) => {
   const timer = minutes * 60 + seconds;
-  const [remainSecond, setRemainSecond] = useState(0)
+  const [remainSecond, setRemainSecond] = useState(timer);
+  const [start, setStart] = React.useState(false);
+  const [over, setOver] = React.useState(false);
   const startTime = Date.now()
+  let interval = undefined;
 
   const handleCountDown = () => {
-    setInterval(() => {
-      // 計算剩餘秒數
-      const pastSeconds = parseInt((Date.now() - startTime) / 1000)
-      const remain = (timer - pastSeconds)
-      setRemainSecond(remain < 0 ? 0 : remain)
-      console.log('[timer] count down: ', remain)
-
-      // 檢查是否結束
-      if (remain <= 0) {
-        clearInterval(handleCountDown)
-        console.log(`[timer] == stop count down ${timer}s  ==`)
-        // onTimeUp() // 透過 prop 通知外部時間已到
+      setStart(!start)
+      if (!start) {
+        interval = setInterval(() => {
+          if (remainSecond > 0) {
+            const pastSeconds = parseInt((Date.now() - startTime) / 1000)
+            const remain = (timer - pastSeconds)
+            setRemainSecond(remain < 0 ? 0 : remain);
+          } else {
+            handleStop();
+            clearInterval(interval);
+          }
+        }, 1000);
       }
-    }, 1000)
-  }
+      else {
+        clearInterval(interval);
+        console.log(interval)
+      }
+  };
+
+  const handleStop = () => {
+    setStart(true)
+    setRemainSecond(timer);
+    clearInterval(interval);
+  };
+
+  const handleTodo = () => {
+  };
 
   return (
-    <>
-      <Typography>
-        {new Date(timer * 1000).toISOString().substr(14, 5)}
-      </Typography>
-      <Button onClick={handleCountDown}>go</Button>
-      <Typography>
-        {new Date(remainSecond * 1000).toISOString().substr(14, 5)}
-      </Typography>
-    </>
+    <Grid container>
+      <Grid item xs={12}>
+        <Typography>
+          {/* {todo} */}
+        </Typography>
+      </Grid>
+      <Grid item xs={12}>
+        <Typography>
+          {new Date(remainSecond * 1000).toISOString().substr(14, 5)}
+        </Typography>
+      </Grid>
+      <Grid item xs={4}>
+      </Grid>
+      <Grid item xs={4}>
+        <IconButton onClick={handleCountDown}>
+          {start ? <PauseIcon /> : <PlayArrowIcon />}
+        </IconButton>
+      </Grid>
+      <Grid item xs={4}>
+      </Grid>
+    </Grid>
   );
 };
 

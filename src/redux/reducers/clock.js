@@ -1,13 +1,12 @@
-// import { ADD_TODO, DELETE_TODO, CHANGE_TEXT } from '../action';
+// import { SET_SELECTED_TODO } from '../action';
 
 const initialState = {
-	minutes: 5,
-	seconds: 0
+	minutes: 0,
+	seconds: 30
 }
 
 function clock(state = initialState, action) {
 	switch (action.type) {
-
 		default:
 			return state;
 	}

@@ -7,7 +7,7 @@ import Clock from './Clock';
 
 const HomePage = () => {
 	return (
-		<Box p={3}>
+		<Box p={3} border={'2px solid #4F9D9D'} borderRadius="8px">
 			<Grid container>
 				<Grid item xs={6}>
 					<Clock />
